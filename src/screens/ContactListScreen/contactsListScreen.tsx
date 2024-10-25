@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Button, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../App';
 import { Contact } from '../../types/types';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 type ContactListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ContactList'>;
 
@@ -12,7 +12,7 @@ interface Props {
   navigation: ContactListScreenNavigationProp;
 }
 
-export default function ContactListScreen({ navigation }: any) {
+export default function ContactListScreen({ navigation }: Props) {
   const [contacts, setContacts] = useState<Contact[]>([]);
 
   useEffect(() => {
@@ -25,24 +25,84 @@ export default function ContactListScreen({ navigation }: any) {
     fetchContacts();
   }, []);
 
-  const navigate = useNavigation()
+  const navigate = useNavigation();
 
   return (
-    <View>
-      <Text>Hola desde Contactos</Text>
+    <View style={styles.container}>
+      <Text style={styles.headerText}>Lista de Contactos</Text>
       <FlatList
         data={contacts}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate('ContactDetail', { contact: item })}>
-            <Text>{item.name}</Text>
+          <TouchableOpacity 
+            style={styles.contactCard} 
+            onPress={() => navigation.navigate('ContactDetail', { contact: item })}
+          >
+            <Text style={styles.contactName}>{item.name}</Text>
+            <Text style={styles.contactInfo}>{item.phone}</Text>
           </TouchableOpacity>
         )}
+        ListEmptyComponent={<Text style={styles.emptyMessage}>No hay contactos guardados</Text>}
       />
-      <Button title="Agregar Contacto" onPress={() => navigation.navigate('AddEditContact')} />
+      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddEditContact')}>
+        <Text style={styles.buttonText}>Agregar Contacto</Text>
+      </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F3F4ED', 
+    padding: 20,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#4B4B4B',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  contactCard: {
+    backgroundColor: '#E8DFF5', 
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  contactName: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#333',
+  },
+  contactInfo: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 5,
+  },
+  emptyMessage: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#999',
+    marginTop: 20,
+  },
+  addButton: {
+    backgroundColor: '#FFB6B9', 
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
 
 
   
