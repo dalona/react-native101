@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../App';
 import { Contact } from '../../types/types';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 
 type ContactListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ContactList'>;
 
@@ -12,7 +12,7 @@ interface Props {
   navigation: ContactListScreenNavigationProp;
 }
 
-export default function ContactListScreen({ navigation }: Props) {
+export default function ContactListScreen({ navigation }: any) {
   const [contacts, setContacts] = useState<Contact[]>([]);
 
   useEffect(() => {
@@ -25,8 +25,11 @@ export default function ContactListScreen({ navigation }: Props) {
     fetchContacts();
   }, []);
 
+  const navigate = useNavigation()
+
   return (
     <View>
+      <Text>Hola desde Contactos</Text>
       <FlatList
         data={contacts}
         keyExtractor={(item) => item.id.toString()}
@@ -40,6 +43,7 @@ export default function ContactListScreen({ navigation }: Props) {
     </View>
   );
 }
+
 
   
 
