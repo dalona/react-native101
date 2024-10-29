@@ -29,6 +29,7 @@ export default function AddEditContactScreen({ navigation, route }: Props) {
       phone,
       email,
       photo,
+      address: ''
     };
 
     const storedContacts = await AsyncStorage.getItem('contacts');

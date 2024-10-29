@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Button, Image, StyleSheet, TouchableOpacity, Alert, Linking, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../App';
@@ -25,6 +25,8 @@ export default function ContactDetailScreen({ navigation, route }: Props) {
     navigation.goBack();
   };
 
+
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -37,6 +39,10 @@ export default function ContactDetailScreen({ navigation, route }: Props) {
       <Text style={styles.contactName}>{contact.name}</Text>
       <Text style={styles.contactInfo}>{contact.phone}</Text>
       <Text style={styles.contactInfo}>{contact.email}</Text>
+
+      <TouchableOpacity style={styles.addressButton} onPress={() =>{navigation.navigate('GoogleMaps')}}>
+        <Text style={styles.buttonText}>Agregar Dirección</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity style={styles.deleteButton} onPress={deleteContact}>
         <Text style={styles.buttonText}>Eliminar Contacto</Text>
@@ -85,11 +91,19 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 5,
   },
+  addressButton: {
+    backgroundColor: '#C4E3CB', 
+    padding: 15,
+    borderRadius: 8,
+    marginTop: 20,
+    width: '100%',
+    alignItems: 'center',
+  },
   deleteButton: {
     backgroundColor: '#FFB6B9', 
     padding: 15,
     borderRadius: 8,
-    marginTop: 20,
+    marginTop: 10,
     width: '100%',
     alignItems: 'center',
   },

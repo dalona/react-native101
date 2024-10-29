@@ -5,12 +5,14 @@ import ContactListScreen from "./src/screens/ContactListScreen/contactsListScree
 import AddEditContactScreen from './src/screens/AddEditContactScreen/addeditcontact';
 import ContactDetailScreen from './src/screens/ContactDetails/contactDetailsScreen';
 import { Contact } from './src/types/types';
+import GoogleMapsScreen from './src/screens/GoogleMapsScreen/googleMapsScreen';
 
 // Definimos el tipo RootStackParamList
 export type RootStackParamList = {
   ContactList: undefined;
   AddEditContact: { contact?: Contact } | undefined;
   ContactDetail: { contact: Contact };
+  GoogleMaps: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -22,17 +24,22 @@ export default function App() {
         <Stack.Screen
           name="ContactList"
           component={ContactListScreen}
-          options={{ title: 'Contactos' }}
+          options={{ title: 'Contacts' }}
         />
         <Stack.Screen
           name="AddEditContact"
           component={AddEditContactScreen}
-          options={{ title: 'Agregar/Editar Contacto' }}
+          options={{ title: 'Add/Edit Contact' }}
         />
         <Stack.Screen
           name="ContactDetail"
           component={ContactDetailScreen}
-          options={{ title: 'Detalle del Contacto' }}
+          options={{ title: 'Contact Details' }}
+        />
+        <Stack.Screen
+          name="GoogleMaps"
+          component={GoogleMapsScreen}
+          options={{ title: 'Contact Details' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
