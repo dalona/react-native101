@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, Button, Image, StyleSheet, TouchableOpacity, Alert, Linking, Platform } from 'react-native';
+import React from 'react'; 
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../App';
@@ -25,8 +25,6 @@ export default function ContactDetailScreen({ navigation, route }: Props) {
     navigation.goBack();
   };
 
-
-
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -40,7 +38,7 @@ export default function ContactDetailScreen({ navigation, route }: Props) {
       <Text style={styles.contactInfo}>{contact.phone}</Text>
       <Text style={styles.contactInfo}>{contact.email}</Text>
 
-      <TouchableOpacity style={styles.addressButton} onPress={() =>{navigation.navigate('GoogleMaps')}}>
+      <TouchableOpacity style={styles.addressButton} onPress={() => { navigation.navigate('GoogleMaps'); }}>
         <Text style={styles.buttonText}>Agregar Dirección</Text>
       </TouchableOpacity>
 
@@ -58,7 +56,7 @@ export default function ContactDetailScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F3F4ED', 
+    backgroundColor: '#1B2845', // Fondo de la pantalla
     padding: 20,
     alignItems: 'center',
   },
@@ -66,7 +64,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 75,
-    backgroundColor: '#E8DFF5', 
+    backgroundColor: '#335C81', // Fondo del contenedor de imagen
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
@@ -77,22 +75,22 @@ const styles = StyleSheet.create({
     borderRadius: 75,
   },
   noImageText: {
-    color: '#999',
+    color: '#65AFFF', // Texto en ausencia de imagen
     fontSize: 16,
   },
   contactName: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#FFFFFF', // Nombre del contacto
     marginBottom: 10,
   },
   contactInfo: {
     fontSize: 18,
-    color: '#666',
+    color: '#65AFFF', // Información de contacto
     marginBottom: 5,
   },
   addressButton: {
-    backgroundColor: '#C4E3CB', 
+    backgroundColor: '#65AFFF', // Fondo del botón de dirección
     padding: 15,
     borderRadius: 8,
     marginTop: 20,
@@ -100,7 +98,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   deleteButton: {
-    backgroundColor: '#FFB6B9', 
+    backgroundColor: '#FF6666', // Fondo del botón de eliminación
     padding: 15,
     borderRadius: 8,
     marginTop: 10,
@@ -108,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   editButton: {
-    backgroundColor: '#B2F9FC', 
+    backgroundColor: '#5A7AA4', // Fondo del botón de edición
     padding: 15,
     borderRadius: 8,
     marginTop: 10,
@@ -116,7 +114,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#FFF',
+    color: '#FFFFFF', // Color de texto de los botones
     fontSize: 16,
     fontWeight: 'bold',
   },

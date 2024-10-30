@@ -104,12 +104,12 @@ export default function AddEditContactScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F7F3E9', 
+    backgroundColor: '#1B2845', 
     padding: 20,
     justifyContent: 'center',
   },
   input: {
-    backgroundColor: '#FFF5E1', 
+    backgroundColor: '#FFFFFF', 
     padding: 10,
     borderRadius: 8,
     marginBottom: 15,
@@ -119,14 +119,14 @@ const styles = StyleSheet.create({
     borderColor: '#E6D5B8',
   },
   button: {
-    backgroundColor: '#FFB6B9', 
+    backgroundColor: '#335C81', 
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 10,
   },
   buttonSave: {
-    backgroundColor: '#C7CEEA', 
+    backgroundColor: '#65AFFF', 
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',

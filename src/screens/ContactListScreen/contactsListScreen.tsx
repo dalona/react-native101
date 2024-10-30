@@ -54,18 +54,18 @@ export default function ContactListScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F3F4ED', 
+    backgroundColor: '#1B2845', 
     padding: 20,
   },
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#4B4B4B',
+    color: '#FFFFFF',
     marginBottom: 20,
     textAlign: 'center',
   },
   contactCard: {
-    backgroundColor: '#E8DFF5', 
+    backgroundColor: '#5A7AA4',
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
@@ -77,11 +77,11 @@ const styles = StyleSheet.create({
   contactName: {
     fontSize: 18,
     fontWeight: '500',
-    color: '#333',
+    color: '#FFFFFF',
   },
   contactInfo: {
     fontSize: 14,
-    color: '#666',
+    color: '#CFDCEB',
     marginTop: 5,
   },
   emptyMessage: {
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   addButton: {
-    backgroundColor: '#FFB6B9', 
+    backgroundColor: '#5899E2', 
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
