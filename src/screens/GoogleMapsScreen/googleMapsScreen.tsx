@@ -1,56 +1,68 @@
-import { View, StyleSheet, Text } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MapView, { Marker, PROVIDER_GOOGLE, MapPressEvent } from 'react-native-maps';
-import { API_KEY } from '@env'; // Para acceder a la clave API desde .env
+import MapView, { Marker, MapPressEvent, PROVIDER_GOOGLE } from 'react-native-maps';
+import { API_KEY } from '@env';
+import { updateContact } from '../../services/contactsService'; 
 
-const GoogleMapsScreen = () => {
+const GoogleMapsScreen = ({ navigation, route }: any) => {
+  const { contactId } = route.params; // Obtener el ID del contacto de los parámetros de la ruta
   const [markerPosition, setMarkerPosition] = useState<{ latitude: number; longitude: number } | null>(null);
-  const [weather, setWeather] = useState<any>(null); // Almacenar los datos del clima
+  const [address, setAddress] = useState<string>('');
 
-  // Cargar el marcador desde Async Storage al iniciar
+  // Cargar posición del marcador y dirección guardada al iniciar
   useEffect(() => {
-    const loadMarkerPosition = async () => {
-      try {
-        const savedMarker = await AsyncStorage.getItem('markerPosition');
-        if (savedMarker) {
-          const parsedPosition = JSON.parse(savedMarker);
-          setMarkerPosition(parsedPosition);
-          fetchWeather(parsedPosition.latitude, parsedPosition.longitude); // Obtener el clima para la posición guardada
-        }
-      } catch (error) {
-        console.log('Error loading marker position', error);
-      }
+    const loadMarkerAndAddress = async () => {
+      const savedMarker = await AsyncStorage.getItem('markerPosition');
+      const savedAddress = await AsyncStorage.getItem('markerAddress');
+      if (savedMarker) setMarkerPosition(JSON.parse(savedMarker));
+      if (savedAddress) setAddress(savedAddress);
     };
-
-    loadMarkerPosition();
+    loadMarkerAndAddress();
   }, []);
 
-  // Función para obtener el clima desde la API de OpenWeather usando fetch
-  const fetchWeather = async (latitude: number, longitude: number) => {
+  // Función para obtener la dirección desde Google Maps API
+  const fetchAddress = async (latitude: number, longitude: number) => {
     try {
-      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`;
-      const response = await fetch(url); // Usamos fetch en lugar de axios
-      if (response.ok) {
-        const data = await response.json(); // Convertimos la respuesta en JSON
-        setWeather(data); // Establecemos los datos del clima
-      } else {
-        console.error('Error fetching weather data:', response.statusText);
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      if (data.results.length > 0) {
+        return data.results[0].formatted_address;
       }
+      return 'Dirección no encontrada';
     } catch (error) {
-      console.error('Error fetching weather data', error);
+      console.error('Error fetching address:', error);
+      return 'Error al obtener la dirección';
     }
   };
 
-  // Guardar y actualizar la posición del marcador al tocar el mapa
+  // Guardar posición y dirección al tocar el mapa
   const handleMapPress = async (event: MapPressEvent) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
-    const newMarkerPosition = { latitude, longitude };
+    setMarkerPosition({ latitude, longitude });
 
-    setMarkerPosition(newMarkerPosition);
-    await AsyncStorage.setItem('markerPosition', JSON.stringify(newMarkerPosition)); // Guardar la nueva posición
+    const fetchedAddress = await fetchAddress(latitude, longitude);
+    setAddress(fetchedAddress);
 
-    fetchWeather(latitude, longitude); // Obtener el clima de la nueva ubicación
+    await AsyncStorage.setItem('markerPosition', JSON.stringify({ latitude, longitude }));
+    await AsyncStorage.setItem('markerAddress', fetchedAddress);
+  };
+
+  // Guardar dirección en el backend
+  const handleSaveAddress = async () => {
+    if (markerPosition && address) {
+      try {
+        await updateContact(contactId, {
+          latitude: markerPosition.latitude.toString(),
+          longitude: markerPosition.longitude.toString(),
+          address,
+        });
+        navigation.goBack();
+      } catch (error) {
+        console.error('Error saving address:', error);
+      }
+    }
   };
 
   return (
@@ -69,17 +81,12 @@ const GoogleMapsScreen = () => {
         {markerPosition && <Marker coordinate={markerPosition} />}
       </MapView>
 
-      {weather && (
-        <View style={styles.weatherInfo}>
-          <Text style={styles.weatherText}>
-            {weather.name}, {weather.sys.country}
-          </Text>
-          <Text style={styles.weatherText}>
-            {weather.main.temp}°C
-          </Text>
-          <Text style={styles.weatherText}>
-            {weather.weather[0].description}
-          </Text>
+      {address && (
+        <View style={styles.addressContainer}>
+          <Text style={styles.addressText}>{address}</Text>
+          <TouchableOpacity style={styles.saveButton} onPress={handleSaveAddress}>
+            <Text style={styles.saveButtonText}>Guardar Dirección</Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>
@@ -88,28 +95,35 @@ const GoogleMapsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    flex: 1,
   },
   map: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
   },
-  weatherInfo: {
+  addressContainer: {
     position: 'absolute',
     bottom: 50,
     left: 10,
     right: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    padding: 10,
-    borderRadius: 5,
-    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 15,
+    borderRadius: 8,
     alignItems: 'center',
   },
-  weatherText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
+  addressText: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 10,
+  },
+  saveButton: {
+    backgroundColor: '#335C81',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  saveButtonText: {
+    color: '#FFF',
+    fontSize: 16,
   },
 });
 
