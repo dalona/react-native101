@@ -86,8 +86,8 @@ android {
     namespace "com.firstfirst"
     defaultConfig {
         applicationId "com.firstfirst"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion 24
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
     }
@@ -114,12 +114,14 @@ android {
 }
 
 dependencies {
-    // The version of react-native is set by the React Native Gradle Plugin
-    implementation("com.facebook.react:react-android")
+    // Especifica la versión de react-android
+    implementation("com.facebook.react:react-android:0.75.4")
 
+    // Verifica si tienes Hermes habilitado y ajusta la dependencia
     if (hermesEnabled.toBoolean()) {
-        implementation("com.facebook.react:hermes-android")
+        implementation("com.facebook.react:hermes-android:0.75.4")
     } else {
         implementation jscFlavor
     }
 }
+
